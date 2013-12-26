@@ -1,6 +1,3 @@
-chef-cookbooks
-==============
-
 # How to setup a host to use these cookbooks
 
 ```

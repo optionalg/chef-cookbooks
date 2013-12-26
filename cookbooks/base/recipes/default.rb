@@ -18,6 +18,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+remote_file "#{Chef::Config[:file_cache_path]}/epel-release-6-8.noarch.rpm" do
+  source "http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
+end
+
+package "epel-release" do
+  source "#{Chef::Config[:file_cache_path]}/epel-release-6-8.noarch.rpm"
+end
+
 package "nano"
 
 cookbook_file "/etc/ssh/sshd_config" do
@@ -26,6 +34,12 @@ cookbook_file "/etc/ssh/sshd_config" do
   group "root"
   mode "0600"
 end  
+
+directory "/root/.ssh" do
+  owner "root"
+  group "root"
+  mode "0700"
+end
 
 remote_file "/root/.ssh/authorized_keys" do
   backup false
