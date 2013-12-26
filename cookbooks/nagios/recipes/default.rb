@@ -61,8 +61,8 @@ bash "build_mod_authnz_persona" do
   notifies :restart, "service[httpd]", :delayed
 end
 
-cookbook_file "/etc/httpd/conf.d/nagios.conf" do
-  source "etc/httpd/conf.d/nagios.conf"
+template "/etc/httpd/conf.d/nagios.conf" do
+  source "etc/httpd/conf.d/nagios.conf.erb"
   owner "root"
   group "root"
   mode "0644"

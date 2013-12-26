@@ -15,7 +15,7 @@ AuthPersonaLogoutPath /persona_logout
 #  Allow from 127.0.0.1
    AuthName "Nagios Access"
    AuthType Persona
-   Require user gene_wood@cementhorizon.com
+   Require user <%= node[:nagios][:users].join(" ") %>
 </Directory>
 
 Alias /nagios "/usr/share/nagios/html"
@@ -31,6 +31,6 @@ Alias /nagios "/usr/share/nagios/html"
 #  Allow from 127.0.0.1
    AuthName "Nagios Access"
    AuthType Persona
-   Require user gene_wood@cementhorizon.com
+   Require user <%= node[:nagios][:users].join(" ") %>
 </Directory>
 
