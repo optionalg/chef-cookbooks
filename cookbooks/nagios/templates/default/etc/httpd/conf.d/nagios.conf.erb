@@ -1,9 +1,5 @@
 ScriptAlias /nagios/cgi-bin/ "/usr/lib64/nagios/cgi-bin/"
 
-LoadModule authz_user_module modules/mod_authz_user.so
-LoadModule authnz_persona_module modules/mod_authnz_persona.so
-AuthPersonaLogoutPath /persona_logout
-
 <Directory "/usr/lib64/nagios/cgi-bin/">
 #  SSLRequireSSL
    Options ExecCGI
@@ -14,8 +10,9 @@ AuthPersonaLogoutPath /persona_logout
 #  Deny from all
 #  Allow from 127.0.0.1
    AuthName "Nagios Access"
-   AuthType Persona
-   Require user <%= node[:nagios][:users].join(" ") %>
+   AuthType Basic
+   AuthUserFile /etc/nagios/passwd
+   Require valid-user
 </Directory>
 
 Alias /nagios "/usr/share/nagios/html"
@@ -30,7 +27,8 @@ Alias /nagios "/usr/share/nagios/html"
 #  Deny from all
 #  Allow from 127.0.0.1
    AuthName "Nagios Access"
-   AuthType Persona
-   Require user <%= node[:nagios][:users].join(" ") %>
+   AuthType Basic
+   AuthUserFile /etc/nagios/passwd
+   Require valid-user 
 </Directory>
 

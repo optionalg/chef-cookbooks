@@ -1,0 +1,22 @@
+LoadModule authz_user_module modules/mod_authz_user.so
+LoadModule authnz_persona_module modules/mod_authnz_persona.so
+AuthPersonaLogoutPath /persona_logout
+
+<Directory "/usr/lib64/nagios/cgi-bin/">
+   Order allow,deny
+   Allow from all
+   AuthName "Nagios Access"
+   AuthType Persona
+   Require user <%= node[:nagios][:users].join(" ") %>
+</Directory>
+
+Alias /nagios "/usr/share/nagios/html"
+
+<Directory "/usr/share/nagios/html">
+   Order allow,deny
+   Allow from all
+   AuthName "Nagios Access"
+   AuthType Persona
+   Require user <%= node[:nagios][:users].join(" ") %>
+</Directory>
+

@@ -48,3 +48,13 @@ remote_file "/root/.ssh/authorized_keys" do
   group "root"
   mode "0600"
 end
+
+file "/var/www/html/index.html" do
+  owner "root"
+  group "root"
+  mode "0644"
+  content "ok"
+end
+
+package "postfix"
+

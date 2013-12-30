@@ -33,34 +33,6 @@ file "/etc/nagios/passwd" do
   mode "0640"
 end
 
-{"yajl" => "yajl-2.0.4-3.el6.x86_64.rpm",
- "yajl-devel" => "yajl-devel-2.0.4-3.el6.x86_64.rpm"}.each do |rpm, file|
-  cookbook_file "#{Chef::Config[:file_cache_path]}/#{file}" do
-    source file
-  end
-  package rpm do
-    source "#{Chef::Config[:file_cache_path]}/#{file}"
-  end
-end
-
-package "gcc"
-package "httpd"
-package "httpd-devel"
-package "curl-devel"
-
-git "#{Chef::Config[:file_cache_path]}/mod_authnz_persona" do
-  repository "https://github.com/mozilla/mod_authnz_persona.git"
-  reference "083fb7da71b2bc0b8b78f42d1f77f048f221fd2d"
-  action :sync
-  notifies :run, "bash[build_mod_authnz_persona]"
-end
-
-bash "build_mod_authnz_persona" do
-  code "cd #{Chef::Config[:file_cache_path]}/mod_authnz_persona\nmake\nmake install"
-  action :nothing
-  notifies :restart, "service[httpd]", :delayed
-end
-
 template "/etc/httpd/conf.d/nagios.conf" do
   source "etc/httpd/conf.d/nagios.conf.erb"
   owner "root"
