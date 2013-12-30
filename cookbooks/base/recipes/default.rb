@@ -18,6 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+include_recipe "base::hostname"
+
 remote_file "#{Chef::Config[:file_cache_path]}/epel-release-6-8.noarch.rpm" do
   source "http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm"
 end
@@ -58,3 +60,16 @@ end
 
 package "postfix"
 
+execute "select_postfix_mta" do
+  command "/usr/sbin/alternatives --set mta /usr/sbin/sendmail.postfix"
+  not_if "/usr/sbin/alternatives --display mta | grep \"link currently points to /usr/sbin/sendmail.postfix\""
+end
+
+service "sendmail" do
+  action [:disable, :stop]
+end
+
+service "postfix" do
+  action [:enable, :start]
+end
+  
