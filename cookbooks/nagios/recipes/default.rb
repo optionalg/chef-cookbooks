@@ -25,6 +25,7 @@ end
 
 package "nagios"
 package "nagios-plugins-all"
+package "nagios-plugins-nrpe"
 
 file "/etc/nagios/passwd" do
   content "#{node[:nagios][:web_username]}:#{node[:nagios][:web_password]}\n"
@@ -39,4 +40,21 @@ template "/etc/httpd/conf.d/nagios.conf" do
   group "root"
   mode "0644"
   notifies :restart, "service[httpd]", :delayed
+end
+
+package "bc"
+
+git "#{Chef::Config[:file_cache_path]}/check_traffic" do
+  repository "https://github.com/cloved/check_traffic.git"
+  reference "v1.4.0"
+end
+
+file "#{Chef::Config[:file_cache_path]}/check_traffic/check_traffic.sh" do
+  owner "root"
+  group "root"
+  mode "0755"
+end
+
+link "/usr/lib64/nagios/plugins/check_traffic.sh" do
+  to "#{Chef::Config[:file_cache_path]}/check_traffic/check_traffic.sh"
 end
