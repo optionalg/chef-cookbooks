@@ -1,0 +1,4 @@
+# Port 5666 for nrpe
+<% node[:nrpe][:allowed_hosts].each do |ip| %>
+-A FWR -p tcp -m tcp --dport 5666 -s <%= ip %>/32 -j ACCEPT
+<% end %>
