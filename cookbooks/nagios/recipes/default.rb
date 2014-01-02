@@ -25,9 +25,37 @@ service	"httpd"	do
   action [:enable, :start]
 end
 
-package "nagios"
+package "nagios" do
+  notifies :restart, "service[httpd]", :delayed
+end
+
+service "nagios" do
+  action [:enable, :start]
+end
+
 package "nagios-plugins-all"
 package "nagios-plugins-nrpe"
+
+package "pnp4nagios" do
+    notifies :restart, "service[httpd]", :delayed
+    notifies :restart, "service[nagios]", :delayed
+end
+
+cookbook_file "/etc/nagios/nagios.cfg" do
+  source "etc/nagios/nagios.cfg"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[nagios]", :delayed
+end
+
+cookbook_file "/etc/nagios/conf.d/pnp4nagios.cfg" do
+  source "etc/nagios/conf.d/pnp4nagios.cfg"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[nagios]", :delayed
+end
 
 file "/etc/nagios/passwd" do
   content "#{node[:nagios][:web_username]}:#{node[:nagios][:web_password]}\n"
